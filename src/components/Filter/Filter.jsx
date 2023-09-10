@@ -1,4 +1,4 @@
-import { filteringContacts } from 'components/redux/contactsStateSlice';
+import { filteringContacts } from 'components/redux/filterSlice';
 import { getFilter } from 'components/redux/selectos';
 import { useDispatch, useSelector } from 'react-redux';
 

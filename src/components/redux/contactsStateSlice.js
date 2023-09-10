@@ -1,51 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createContact, fetchContacts, deleteContact } from './operations';
 
-const initialContactsState = {
-  contacts: {
-    items: [],
-    isLoading: false,
-    error: null,
-  },
-  filter: '',
-};
+const initialContacts = { items: [], isLoading: false, error: null };
 
 const rejectFunc = (state, action) => {
   return {
-    contacts: {
-      items: state.contacts.items,
-      isLoading: false,
-      error: action.payload,
-    },
-    filter: '',
+    items: state.items,
+    isLoading: false,
+    error: action.payload,
   };
 };
 const pendingFunc = state => {
   return {
-    contacts: {
-      items: state.contacts.items,
-      isLoading: true,
-      error: null,
-    },
-    filter: '',
+    items: state.items,
+    isLoading: true,
+    error: null,
   };
 };
 
 const contactsStateSlice = createSlice({
-  name: 'contactsState',
-  initialState: initialContactsState,
-  reducers: {
-    filteringContacts: (state, action) => {
-      return {
-        contacts: {
-          items: [...state.contacts.items],
-          isLoading: false,
-          error: null,
-        },
-        filter: action.payload,
-      };
-    },
-  },
+  name: 'contacts',
+  initialState: initialContacts,
 
   extraReducers: builder => {
     // fetch
@@ -53,12 +28,9 @@ const contactsStateSlice = createSlice({
     builder.addCase(fetchContacts.pending, pendingFunc);
     builder.addCase(fetchContacts.fulfilled, (_, action) => {
       return {
-        contacts: {
-          items: [...action.payload],
-          isLoading: false,
-          error: null,
-        },
-        filter: '',
+        items: [...action.payload],
+        isLoading: false,
+        error: null,
       };
     });
     builder.addCase(fetchContacts.rejected, rejectFunc);
@@ -68,12 +40,9 @@ const contactsStateSlice = createSlice({
     builder.addCase(createContact.pending, pendingFunc);
     builder.addCase(createContact.fulfilled, (state, action) => {
       return {
-        contacts: {
-          items: [...state.contacts.items, action.payload],
-          isLoading: false,
-          error: null,
-        },
-        filter: '',
+        items: [...state.items, action.payload],
+        isLoading: false,
+        error: null,
       };
     });
     builder.addCase(createContact.rejected, rejectFunc);
@@ -83,14 +52,9 @@ const contactsStateSlice = createSlice({
     builder.addCase(deleteContact.pending, pendingFunc);
     builder.addCase(deleteContact.fulfilled, (state, action) => {
       return {
-        contacts: {
-          items: [
-            ...state.contacts.items.filter(el => el.id !== action.payload),
-          ],
-          isLoading: false,
-          error: null,
-        },
-        filter: '',
+        items: [...state.items.filter(el => el.id !== action.payload)],
+        isLoading: false,
+        error: null,
       };
     });
     builder.addCase(deleteContact.rejected, rejectFunc);
