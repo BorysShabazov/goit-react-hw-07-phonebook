@@ -1,4 +1,4 @@
-import { filteringContacts } from 'components/redux/filterSlice';
+import { filteringContacts } from 'components/redux/contactsStateSlice';
 import { getFilter } from 'components/redux/selectos';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,8 +7,7 @@ export const Filter = () => {
   const filter = useSelector(getFilter);
 
   const handlFilteringContacts = evt => {
-    const { value } = evt.currentTarget;
-    dispatch(filteringContacts(value));
+    dispatch(filteringContacts(evt.currentTarget.value));
   };
 
   return (

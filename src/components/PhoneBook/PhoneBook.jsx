@@ -1,9 +1,12 @@
 import styles from './phoneBook.module.css';
-import { useDispatch } from 'react-redux';
-import { addContact } from 'components/redux/contactsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { createContact } from 'components/redux/operations';
+import { nanoid } from '@reduxjs/toolkit';
+import { getContacts } from 'components/redux/selectos';
 
 export const PhoneBook = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -11,7 +14,16 @@ export const PhoneBook = () => {
     const inputName = event.currentTarget.name.value.trim();
     const inputNumber = event.currentTarget.number.value.trim();
 
-    dispatch(addContact(inputName, inputNumber));
+    if (
+      contacts.find(el => el.name.toLowerCase() === inputName.toLowerCase())
+    ) {
+      alert(`${inputName} is already in contacts.`);
+      return;
+    }
+
+    dispatch(
+      createContact({ name: inputName, number: inputNumber, id: nanoid() })
+    );
 
     event.currentTarget.number.value = '';
     event.currentTarget.name.value = '';

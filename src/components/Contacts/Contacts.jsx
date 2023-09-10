@@ -1,7 +1,8 @@
 import styles from './Contacts.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContacts, getFilter } from 'components/redux/selectos';
-import { deleteContact } from 'components/redux/contactsSlice';
+import { fetchContacts, deleteContact } from 'components/redux/operations';
+import { useEffect } from 'react';
 
 export const Contacts = ({ children }) => {
   const dispatch = useDispatch();
@@ -10,8 +11,12 @@ export const Contacts = ({ children }) => {
   const normalizeFilter = filter.toLocaleLowerCase();
   const visibleContacts = getVisibleContacts(contacts);
 
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
   function getVisibleContacts(contacts) {
-    return contacts.length > 0
+    return contacts?.length > 0
       ? contacts.filter(contact => {
           return contact.name.toLocaleLowerCase().includes(normalizeFilter);
         })
